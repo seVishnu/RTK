@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = [
   { id: "1", title: "Learning RTK", content: "Lets do this" },
@@ -9,8 +9,19 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    postAdded: (state, action) => {
-      state.push(action.payload); //immer JS makes the states to be mutated here. Acceptable here only!!!
+    postAdded: {
+      reducer(state, action) {
+        state.push(action.payload); //immer JS makes the states to be mutated here. Acceptable here only!!!
+      },
+      prepare(title, content) {
+        return {
+          payload: {
+            id: nanoid(),
+            title,
+            content,
+          },
+        };
+      },
     },
   },
 });
