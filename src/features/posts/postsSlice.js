@@ -13,12 +13,13 @@ const postsSlice = createSlice({
       reducer(state, action) {
         state.push(action.payload); //immer JS makes the states to be mutated here. Acceptable here only!!!
       },
-      prepare(title, content) {
+      prepare(title, content, userId) {
         return {
           payload: {
             id: nanoid(),
             title,
             content,
+            userId,
           },
         };
       },
