@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { postAdded } from "./postsSlice";
+import { postAdded, addNewPost } from "./postsSlice";
 import { selectAllUsers } from "../users/usersSlice";
 
 const AddPostForm = () => {
@@ -9,6 +9,7 @@ const AddPostForm = () => {
     title: "",
     content: "",
     userId: "",
+    requestStatus: "idle",
   });
   const users = useSelector(selectAllUsers);
   const onDataChange = (e) => {
@@ -26,17 +27,39 @@ const AddPostForm = () => {
         return state;
     }
   };
+  // const canSave =Boolean(state.title) && Boolean(state.content) && Boolean(state.userId);
   const canSave =
-    Boolean(state.title) && Boolean(state.content) && Boolean(state.userId);
+    [state.title, state.content, state.userId].every(Boolean) &&
+    state.requestStatus === "idle";
+  // const savePost = (e) => {
+  //   e.preventDefault();
+  //   if (state.title && state.content && state.userId) {
+  //     dispatch(postAdded(state.title, state.content, state.userId));
+  //     setState({
+  //       title: "",
+  //       content: "",
+  //       userId: "",
+  //     });
+  //   }
+  // };
   const savePost = (e) => {
     e.preventDefault();
-    if (state.title && state.content && state.userId) {
-      dispatch(postAdded(state.title, state.content, state.userId));
-      setState({
-        title: "",
-        content: "",
-        userId: "",
-      });
+    if (canSave) {
+      try {
+        setState((prev) => ({ ...prev, requestStatus: "pending" }));
+        dispatch(
+          addNewPost({
+            title: state.title,
+            body: state.content,
+            userId: state.userId,
+          })
+        ).unwrap();
+        setState((prev) => ({ ...prev, title: "", content: "", userId: "" }));
+      } catch (error) {
+        console.log("Failed to save the post", error);
+      } finally {
+        setState((prev) => ({ ...prev, requestStatus: "idle" }));
+      }
     }
   };
   const userOptions = users.map((user) => (
