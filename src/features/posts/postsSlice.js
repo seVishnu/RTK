@@ -57,6 +57,13 @@ export const addNewPost = createAsyncThunk(
     }
   }
 );
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  async (initialPost) => {
+    try {
+    } catch (error) {}
+  }
+);
 const postsSlice = createSlice({
   name: "posts",
   initialState,
