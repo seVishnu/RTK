@@ -32,7 +32,7 @@ const EditPostForm = () => {
         setState((state) => ({ ...state, content: e.target.value }));
         break;
       case "postAuthor":
-        setState((state) => ({ ...state, userId: e.target.value }));
+        setState((state) => ({ ...state, userId: Number(e.target.value) }));
         break;
       default:
         return state;
